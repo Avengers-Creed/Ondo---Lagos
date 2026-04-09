@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ondo to Lagos — Kingdom Journey</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1a1a18;--ink2:#4a4a46;--ink3:#8a8a84;
+  --paper:#f8f6f0;--card:#ffffff;
+  --border:rgba(26,26,24,0.1);--border2:rgba(26,26,24,0.2);
+  --teal:#0f6e56;--teal-l:#e1f5ee;
+  --gold:#b07b17;--gold-l:#faeeda;
+  --purple:#534ab7;--purple-l:#eeedfe;
+  --coral:#993c1d;--coral-l:#faece7;
+  --red:#a32d2d;--red-l:#fcebeb;
+  --green:#3b6d11;--green-l:#eaf3de;
+  --r:12px;--rs:8px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);min-height:100vh;}
+
+/* ── NAV ── */
+.nav{background:var(--card);border-bottom:1px solid var(--border);padding:0 20px;display:flex;align-items:center;justify-content:space-between;height:58px;position:sticky;top:0;z-index:100;gap:12px;}
+.brand-name{font-family:'Playfair Display',serif;font-size:16px;font-weight:600;white-space:nowrap;}
+.brand-sub{font-size:10px;color:var(--ink3);letter-spacing:.07em;text-transform:uppercase;margin-top:1px;}
+.nav-tabs{display:flex;gap:2px;flex-shrink:0;}
+.ntab{background:none;border:none;padding:6px 11px;font-size:12px;font-family:'DM Sans',sans-serif;color:var(--ink3);cursor:pointer;border-radius:var(--rs);transition:all .15s;white-space:nowrap;}
+.ntab:hover{background:var(--paper);color:var(--ink);}
+.ntab.active{background:var(--ink);color:white;font-weight:500;}
+
+/* ── PAGES ── */
+.page{display:none;padding:22px 20px;max-width:680px;margin:0 auto;}
+.page.active{display:block;}
+.pg-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:600;margin-bottom:4px;}
+.pg-sub{font-size:13px;color:var(--ink3);margin-bottom:20px;line-height:1.5;}
+.sec-lbl{font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:10px;}
+
+/* ── CARDS ── */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px 18px;margin-bottom:12px;}
+.card-t{font-size:13px;font-weight:500;margin-bottom:10px;}
+.surface{background:var(--paper);border-radius:var(--rs);padding:12px 14px;}
+
+/* ── METRICS ── */
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:18px;}
+.metric{background:var(--card);border:1px solid var(--border);border-radius:var(--rs);padding:12px 10px;text-align:center;}
+.m-val{font-family:'Playfair Display',serif;font-size:22px;font-weight:600;}
+.m-lbl{font-size:10px;color:var(--ink3);margin-top:2px;}
+
+/* ── ROWS ── */
+.trow{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--border);}
+.trow:last-child{border-bottom:none;}
+.av{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;flex-shrink:0;}
+.av-sm{width:28px;height:28px;font-size:10px;}
+.tmeta{flex:1;min-width:0;}
+.t-name{font-size:13px;font-weight:500;}
+.t-sub{font-size:10px;color:var(--ink3);}
+.t-goal{font-size:11px;color:var(--ink2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:1px;}
+.prow{display:flex;align-items:center;gap:8px;margin-top:4px;}
+.ptrack{flex:1;height:4px;background:var(--paper);border-radius:2px;overflow:hidden;border:1px solid var(--border);}
+.pfill{height:100%;border-radius:2px;transition:width .5s;}
+.ppct{font-size:10px;color:var(--ink3);min-width:26px;text-align:right;}
+
+/* ── BADGES ── */
+.badge{display:inline-flex;align-items:center;font-size:10px;font-weight:500;padding:3px 9px;border-radius:20px;white-space:nowrap;}
+.b-teal{background:var(--teal-l);color:var(--teal);}
+.b-gold{background:var(--gold-l);color:var(--gold);}
+.b-coral{background:var(--coral-l);color:var(--coral);}
+.b-purple{background:var(--purple-l);color:var(--purple);}
+.b-red{background:var(--red-l);color:var(--red);}
+.b-green{background:var(--green-l);color:var(--green);}
+.b-gray{background:var(--paper);color:var(--ink3);border:1px solid var(--border);}
+
+/* ── FORM ── */
+.ff{margin-bottom:14px;}
+.fl{font-size:11px;font-weight:500;color:var(--ink2);margin-bottom:5px;letter-spacing:.02em;display:block;}
+.fl span{color:var(--coral);}
+.fi,.fs,.ft{width:100%;padding:10px 12px;font-size:13px;font-family:'DM Sans',sans-serif;border:1px solid var(--border2);border-radius:var(--rs);background:var(--card);color:var(--ink);outline:none;transition:border-color .15s;}
+.fi:focus,.fs:focus,.ft:focus{border-color:var(--purple);}
+.ft{min-height:72px;resize:vertical;line-height:1.5;}
+.fhint{font-size:11px;color:var(--ink3);margin-top:4px;line-height:1.4;}
+.chk-row{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ink2);margin-top:8px;cursor:pointer;}
+
+/* ── BUTTONS ── */
+.btn{padding:10px 18px;font-size:13px;font-weight:500;font-family:'DM Sans',sans-serif;border-radius:var(--rs);cursor:pointer;transition:all .15s;border:1px solid var(--border2);background:transparent;color:var(--ink);}
+.btn:hover{background:var(--paper);}
+.btn-p{background:var(--ink);color:white;border-color:var(--ink);}
+.btn-p:hover{opacity:.85;}
+.btn-p:disabled{opacity:.4;cursor:not-allowed;}
+
+/* ── HABITS ── */
+.hab{padding:12px 0;border-bottom:1px solid var(--border);}
+.hab:last-child{border-bottom:none;}
+.hab-head{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.hab-num{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;flex-shrink:0;}
+
+/* ── STEPS ── */
+.steps{display:flex;margin-bottom:24px;}
+.step{flex:1;display:flex;flex-direction:column;align-items:center;}
+.sdot{width:28px;height:28px;border-radius:50%;border:2px solid var(--border2);background:var(--card);color:var(--ink3);font-size:12px;font-weight:500;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.sdot.done{background:var(--teal);border-color:var(--teal);color:white;}
+.sdot.active{background:var(--ink);border-color:var(--ink);color:white;}
+.slbl{font-size:10px;color:var(--ink3);margin-top:4px;text-align:center;}
+.slbl.active{color:var(--ink);font-weight:500;}
+.sline{flex:1;height:2px;background:var(--border);margin-top:14px;transition:background .2s;}
+.sline.done{background:var(--teal);}
+
+/* ── MILESTONE CARDS ── */
+.ms-card{border:1px solid var(--border);border-radius:var(--rs);padding:13px 15px;margin-bottom:8px;}
+.ms-title{font-size:13px;font-weight:500;}
+.ms-scripture{font-size:11px;color:var(--teal);margin-top:3px;font-style:italic;}
+.ms-desc{font-size:12px;color:var(--ink2);margin-top:5px;line-height:1.5;}
+.ms-kingdom{display:inline-block;font-size:10px;color:var(--teal);background:var(--teal-l);padding:2px 9px;border-radius:10px;margin-top:5px;}
+
+/* ── STAKE BAR ── */
+.sb-track{flex:1;height:6px;background:var(--paper);border-radius:3px;overflow:hidden;border:1px solid var(--border);}
+.sb-fill{height:100%;border-radius:3px;background:var(--teal);}
+
+/* ── ONBOARD STEPS ── */
+.ob-step{display:none;} .ob-step.active{display:block;}
+
+/* ── KINGDOM BANNER ── */
+.kbanner{background:linear-gradient(135deg,#1a3a2a,#0f2d20);color:white;border-radius:var(--r);padding:16px 18px;margin-bottom:14px;}
+.kbanner .verse{font-family:'Playfair Display',serif;font-size:14px;color:rgba(255,255,255,.85);line-height:1.6;font-style:italic;}
+.kbanner .ref{font-size:11px;color:rgba(255,255,255,.45);margin-top:6px;letter-spacing:.05em;}
+
+/* ── CI TIME ROWS ── */
+.ci-row{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:12px;}
+.ci-row:last-child{border-bottom:none;}
+.ci-time{min-width:52px;color:var(--ink3);font-size:11px;padding-top:1px;}
+
+/* ── ALERTS ── */
+.err{background:var(--red-l);color:var(--red);border-radius:var(--rs);padding:10px 12px;font-size:12px;margin-bottom:12px;display:none;}
+.suc{background:var(--teal-l);color:var(--teal);border-radius:var(--rs);padding:10px 12px;font-size:12px;margin-bottom:12px;display:none;}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:white;padding:10px 20px;border-radius:var(--rs);font-size:13px;font-weight:500;opacity:0;transition:all .3s;pointer-events:none;z-index:9999;white-space:nowrap;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* ── LOADING ── */
+.spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:white;border-radius:50%;animation:sp .6s linear infinite;margin-right:6px;vertical-align:middle;}
+@keyframes sp{to{transform:rotate(360deg);}}
+.page-spin{display:flex;align-items:center;justify-content:center;padding:36px;}
+.page-spinner{width:28px;height:28px;border:2px solid var(--border2);border-top-color:var(--ink);border-radius:50%;animation:sp .6s linear infinite;}
+
+/* ── API KEY SCREEN ── */
+.key-screen{display:flex;align-items:center;justify-content:center;min-height:calc(100vh - 58px);padding:24px;}
+.key-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:28px 24px;max-width:440px;width:100%;}
+.key-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:600;margin-bottom:8px;}
+.key-sub{font-size:13px;color:var(--ink2);line-height:1.6;margin-bottom:20px;}
+.key-steps{font-size:12px;color:var(--ink2);line-height:1.9;margin-bottom:20px;background:var(--paper);border-radius:var(--rs);padding:12px 14px;}
+.key-steps strong{color:var(--ink);}
+
+/* ── TWO COL ── */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:500px){
+  .two-col{grid-template-columns:1fr;}
+  .metrics{grid-template-columns:repeat(2,1fr);}
+  .ntab{padding:6px 8px;font-size:11px;}
+  .nav{padding:0 12px;}
+}
+
+/* ── WEEK DOTS ── */
+.wkgrid{display:grid;grid-template-columns:repeat(12,1fr);gap:3px;margin-top:6px;}
+.wk{height:20px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:500;}
+.wk-done{background:var(--teal);color:#e1f5ee;}
+.wk-now{background:var(--gold);color:#fff;}
+.wk-miss{background:var(--coral-l);color:var(--coral);border:1px solid var(--coral);}
+.wk-next{background:var(--paper);color:var(--ink3);border:1px solid var(--border);}
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<!-- ══════════════════════════════════
+     API KEY SETUP SCREEN
+     (hidden once key is saved)
+══════════════════════════════════ -->
+<div id="key-screen" class="key-screen" style="display:none;">
+  <div class="key-card">
+    <div class="key-title">Connect to Airtable</div>
+    <div class="key-sub">This app stores all journey data in your Airtable database. You need a personal API token to connect. This is a one-time setup.</div>
+    <div class="key-steps">
+      <strong>How to get your token:</strong><br>
+      1. Go to <strong>airtable.com/create/tokens</strong><br>
+      2. Click <strong>"Create new token"</strong><br>
+      3. Name it anything (e.g. "Journey App")<br>
+      4. Scopes: add <strong>data.records:read</strong> and <strong>data.records:write</strong><br>
+      5. Base access: select <strong>"Untitled Base"</strong><br>
+      6. Click <strong>Create token</strong> — copy it<br>
+      7. Paste it below and click Save
+    </div>
+    <div class="ff">
+      <label class="fl">Your Airtable API token<span>*</span></label>
+      <input type="password" class="fi" id="api-key-input" placeholder="pat...">
+      <div class="fhint">Stored locally in your browser only. Never sent anywhere except Airtable.</div>
+    </div>
+    <div id="key-err" class="err"></div>
+    <button class="btn btn-p" id="key-btn" onclick="saveKey()" style="width:100%;">Connect and launch app</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     MAIN APP (shown after key saved)
+══════════════════════════════════ -->
+<div id="main-app" style="display:none;">
+
+<nav class="nav">
+  <div>
+    <div class="brand-name">Ondo to Lagos</div>
+    <div class="brand-sub">Kingdom Transformation Journey</div>
+  </div>
+  <div class="nav-tabs">
+    <button class="ntab active" onclick="go('board',this)">Board</button>
+    <button class="ntab" onclick="go('myweek',this)">My Week</button>
+    <button class="ntab" onclick="go('library',this)">Library</button>
+    <button class="ntab" onclick="go('ci',this)">CI</button>
+    <button class="ntab" onclick="go('join',this)">+ Join</button>
+  </div>
+</nav>
+
+<!-- BOARD -->
+<div id="page-board" class="page active">
+  <div class="pg-title">Journey Board</div>
+  <div class="pg-sub">Live progress for every traveler. Synced directly with Airtable.</div>
+  <div class="metrics">
+    <div class="metric"><div class="m-val" id="m-cnt">–</div><div class="m-lbl">Travelers</div></div>
+    <div class="metric"><div class="m-val" id="m-trk">–</div><div class="m-lbl">On track</div></div>
+    <div class="metric"><div class="m-val">3</div><div class="m-lbl">Current week</div></div>
+    <div class="metric"><div class="m-val">Apr 23</div><div class="m-lbl">Next CI</div></div>
+  </div>
+  <div class="sec-lbl">Travelers</div>
+  <div class="card" id="bd-travelers"><div class="page-spin"><div class="page-spinner"></div></div></div>
+  <div style="margin-top:14px;">
+    <div class="sec-lbl">Stakes pool</div>
+    <div class="card" id="bd-stakes"><div class="page-spin"><div class="page-spinner"></div></div></div>
+  </div>
+  <div style="margin-top:14px;">
+    <div class="sec-lbl">Next CI session — Wed 23 April, 9pm</div>
+    <div class="card">
+      <div class="kbanner">
+        <div class="verse">"Where two or three gather in my name, there am I with them."</div>
+        <div class="ref">Matthew 18:20 &nbsp;·&nbsp; Wednesday 23 April, 9:00 PM</div>
+      </div>
+      <div class="sec-lbl">45-minute format</div>
+      <div class="ci-row"><span class="ci-time">0–5 min</span><span>Kingdom opener — Scripture or devotional</span></div>
+      <div class="ci-row"><span class="ci-time">5–15 min</span><span>Reporter shares — prepared deep insight</span></div>
+      <div class="ci-row"><span class="ci-time">15–35 min</span><span>Round table — win, struggle, next-week commitment (3–4 min each)</span></div>
+      <div class="ci-row"><span class="ci-time">35–40 min</span><span>Driver challenge or provocation</span></div>
+      <div class="ci-row"><span class="ci-time">40–45 min</span><span>Closing prayer — rotating duty</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- MY WEEK -->
+<div id="page-myweek" class="page">
+  <div class="pg-title">Log My Week</div>
+  <div class="pg-sub">Your 3 habits and milestone. Saves directly to Airtable the moment you submit.</div>
+  <div class="card" style="margin-bottom:14px;">
+    <div class="ff" style="margin-bottom:0;">
+      <label class="fl">Who is logging?<span>*</span></label>
+      <input type="text" class="fi" id="log-name" placeholder="Your full name exactly as registered">
+    </div>
+  </div>
+  <div class="card" style="margin-bottom:12px;">
+    <div class="card-t">3 universal habits — this week</div>
+    <div class="hab">
+      <div class="hab-head">
+        <div class="hab-num" style="background:var(--teal-l);color:var(--teal);">1</div>
+        <div><div style="font-size:13px;font-weight:500;">Kingdom anchor</div><div style="font-size:11px;color:var(--ink3);">Scripture, prayer, or Kingdom reflection tied to your journey</div></div>
+      </div>
+      <textarea class="ft" id="h1-text" placeholder="Write the Scripture or reflection you anchored in this week..."></textarea>
+      <label class="chk-row"><input type="checkbox" id="h1-done"> I completed this habit this week</label>
+    </div>
+    <div class="hab">
+      <div class="hab-head">
+        <div class="hab-num" style="background:var(--purple-l);color:var(--purple);">2</div>
+        <div><div style="font-size:13px;font-weight:500;">Learning input</div><div style="font-size:11px;color:var(--ink3);">Book chapter, video, podcast — from driver or library pick</div></div>
+      </div>
+      <textarea class="ft" id="h2-text" placeholder="What did you consume? What were your 2–3 key takeaways?"></textarea>
+      <label class="chk-row"><input type="checkbox" id="h2-done"> I completed this habit this week</label>
+    </div>
+    <div class="hab">
+      <div class="hab-head">
+        <div class="hab-num" style="background:var(--gold-l);color:var(--gold);">3</div>
+        <div><div style="font-size:13px;font-weight:500;">Concrete action</div><div style="font-size:11px;color:var(--ink3);">Something physical toward your destination — must be verifiable</div></div>
+      </div>
+      <textarea class="ft" id="h3-text" placeholder="What did you actually do? Not a thought — an action."></textarea>
+      <label class="chk-row"><input type="checkbox" id="h3-done"> I completed this habit this week</label>
+    </div>
+  </div>
+  <div class="card" style="margin-bottom:12px;">
+    <div class="card-t">Milestone this week</div>
+    <div class="ff">
+      <label class="fl">Describe your milestone</label>
+      <textarea class="ft" id="ms-text" placeholder="What milestone were you working on? Driver-assigned or library pick?"></textarea>
+    </div>
+    <div style="display:flex;gap:16px;flex-wrap:wrap;">
+      <label class="chk-row"><input type="checkbox" id="ms-done"> Milestone completed</label>
+      <label class="chk-row"><input type="checkbox" id="drv-ci"> Driver checked in this week</label>
+      <label class="chk-row"><input type="checkbox" id="exc-note"> Excuse notice given (if missed)</label>
+    </div>
+  </div>
+  <div class="card" style="margin-bottom:16px;">
+    <div class="card-t">Reflection</div>
+    <textarea class="ft" id="refl-text" placeholder="Optional — breakthrough, struggle, question for CI? What is God showing you this week?"></textarea>
+  </div>
+  <div id="log-err" class="err"></div>
+  <div id="log-suc" class="suc"></div>
+  <button class="btn btn-p" id="log-btn" onclick="saveLog()" style="width:100%;">Save week to Airtable</button>
+</div>
+
+<!-- LIBRARY -->
+<div id="page-library" class="page">
+  <div class="pg-title">Milestone Library</div>
+  <div class="pg-sub">Pre-loaded Kingdom milestones. No driver needed — pick from here when yours is unavailable.</div>
+  <div class="ff">
+    <select class="fs" id="lib-filter" onchange="renderLib()">
+      <option value="all">All journey types</option>
+      <option value="Finance">Finance</option>
+      <option value="Performance">Performance</option>
+      <option value="Faith">Faith</option>
+      <option value="Career">Career</option>
+      <option value="Health">Health</option>
+      <option value="All Journeys">Universal (all journeys)</option>
+    </select>
+  </div>
+  <div id="lib-list"></div>
+</div>
+
+<!-- CI -->
+<div id="page-ci" class="page">
+  <div class="pg-title">Collective Intelligence</div>
+  <div class="pg-sub">Every Wednesday, 9pm. Rotating reporter. Everyone comes prepared.</div>
+  <div class="kbanner">
+    <div class="verse">"Iron sharpens iron, and one person sharpens another."</div>
+    <div class="ref">Proverbs 27:17 &nbsp;·&nbsp; The foundation of every CI session</div>
+  </div>
+  <div class="sec-lbl">Reporter rotation — weeks 3–10</div>
+  <div class="card" id="ci-rot"></div>
+  <div style="margin-top:16px;">
+    <div class="sec-lbl">Log a CI session</div>
+    <div class="card">
+      <div class="two-col">
+        <div class="ff"><label class="fl">Session date</label><input type="date" class="fi" id="ci-date"></div>
+        <div class="ff"><label class="fl">Status</label><select class="fs" id="ci-status"><option>Held</option><option>Postponed</option><option>Cancelled</option></select></div>
+      </div>
+      <div class="two-col">
+        <div class="ff"><label class="fl">Reporter this week</label><input type="text" class="fi" id="ci-rep" placeholder="Reporter's name"></div>
+        <div class="ff"><label class="fl">Attendance</label><input type="number" class="fi" id="ci-att" value="4" min="1"></div>
+      </div>
+      <div class="ff"><label class="fl">Reporter topic &amp; insight</label><textarea class="ft" id="ci-topic" placeholder="What did the reporter share?"></textarea></div>
+      <div class="ff"><label class="fl">Key group insight</label><textarea class="ft" id="ci-insight" placeholder="Main takeaway for the group?"></textarea></div>
+      <div class="ff"><label class="fl">Kingdom insight that emerged</label><textarea class="ft" id="ci-kingdom" placeholder="What Kingdom truth came up?"></textarea></div>
+      <div id="ci-err" class="err"></div>
+      <div id="ci-suc" class="suc"></div>
+      <button class="btn btn-p" id="ci-btn" onclick="saveCI()" style="width:100%;">Save session to Airtable</button>
+    </div>
+  </div>
+</div>
+
+<!-- JOIN -->
+<div id="page-join" class="page">
+  <div class="pg-title">Join the Journey</div>
+  <div class="pg-sub">Complete this once. Your profile is created in Airtable the moment you submit. The journey starts now.</div>
+
+  <div class="steps">
+    <div class="step"><div class="sdot active" id="sd1">1</div><div class="slbl active" id="sl1">You</div></div>
+    <div class="sline" id="sln1"></div>
+    <div class="step"><div class="sdot" id="sd2">2</div><div class="slbl" id="sl2">Journey</div></div>
+    <div class="sline" id="sln2"></div>
+    <div class="step"><div class="sdot" id="sd3">3</div><div class="slbl" id="sl3">Vehicle</div></div>
+    <div class="sline" id="sln3"></div>
+    <div class="step"><div class="sdot" id="sd4">4</div><div class="slbl" id="sl4">Confirm</div></div>
+  </div>
+
+  <!-- Step 1 -->
+  <div class="ob-step active" id="ob1">
+    <div class="card">
+      <div class="ff"><label class="fl">Full name<span>*</span></label><input type="text" class="fi" id="ob-name" placeholder="Your full name"></div>
+      <div class="ff"><label class="fl">Phone number<span>*</span></label><input type="tel" class="fi" id="ob-phone" placeholder="+234 ..."></div>
+      <div class="ff" style="margin-bottom:0;"><label class="fl">Email address</label><input type="email" class="fi" id="ob-email" placeholder="your@email.com"></div>
+    </div>
+    <button class="btn btn-p" onclick="obFwd(1)" style="width:100%;margin-top:4px;">Continue</button>
+  </div>
+
+  <!-- Step 2 -->
+  <div class="ob-step" id="ob2">
+    <div class="card">
+      <div class="ff">
+        <label class="fl">Journey type<span>*</span></label>
+        <select class="fs" id="ob-type"><option value="">Select your journey type...</option><option>Finance</option><option>Performance</option><option>Faith</option><option>Career</option><option>Health</option><option>Custom</option></select>
+        <div class="fhint">This determines which milestones load in your library.</div>
+      </div>
+      <div class="ff" style="margin-bottom:0;">
+        <label class="fl">Journey declaration<span>*</span></label>
+        <textarea class="ft" id="ob-decl" style="min-height:90px;" placeholder="I am traveling from [current reality] to [desired destination]."></textarea>
+        <div class="fhint">Be specific and honest. This is your compass for the next 3 months.</div>
+      </div>
+    </div>
+    <div class="kbanner"><div class="verse">"Commit your plans to the Lord, and your purposes will be established."</div><div class="ref">Proverbs 16:3</div></div>
+    <div style="display:flex;gap:8px;"><button class="btn" onclick="obBack(2)">Back</button><button class="btn btn-p" onclick="obFwd(2)" style="flex:1;">Continue</button></div>
+  </div>
+
+  <!-- Step 3 -->
+  <div class="ob-step" id="ob3">
+    <div class="card">
+      <div class="ff">
+        <label class="fl">Your vehicle<span>*</span></label>
+        <input type="text" class="fi" id="ob-vehicle" placeholder="e.g. The Church, Nigerian Dreamers Community...">
+        <div class="fhint">The community or structure you are traveling inside.</div>
+      </div>
+      <div class="ff">
+        <label class="fl">Your driver<span>*</span></label>
+        <input type="text" class="fi" id="ob-driver" placeholder="Full name of your chosen driver/coach">
+        <div class="fhint">Someone who has gone further on your path. They hold you accountable weekly.</div>
+      </div>
+      <div class="ff" style="margin-bottom:0;">
+        <label class="fl">Your company</label>
+        <textarea class="ft" id="ob-company" style="min-height:60px;" placeholder="Names of people journeying with you..."></textarea>
+        <div class="fhint">Your witnesses and rally team. List them by name.</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;"><button class="btn" onclick="obBack(3)">Back</button><button class="btn btn-p" onclick="obFwd(3)" style="flex:1;">Continue</button></div>
+  </div>
+
+  <!-- Step 4 -->
+  <div class="ob-step" id="ob4">
+    <div class="card" style="margin-bottom:12px;">
+      <div class="card-t">Your journey summary</div>
+      <div id="ob-summary" style="font-size:13px;color:var(--ink2);line-height:1.9;"></div>
+    </div>
+    <div class="surface" style="margin-bottom:14px;font-size:12px;color:var(--ink2);line-height:1.6;">
+      <strong style="color:var(--ink);display:block;margin-bottom:3px;">Stake commitment — ₦10,000</strong>
+      By joining you commit ₦10,000 to the journey pool. Missing a milestone without notice = ₦500 debit. Four consecutive complete weeks = ₦500 credit back. Coaches are staked too.
+    </div>
+    <div id="join-err" class="err"></div>
+    <div id="join-suc" class="suc"></div>
+    <div style="display:flex;gap:8px;"><button class="btn" onclick="obBack(4)">Back</button><button class="btn btn-p" id="join-btn" onclick="submitJoin()" style="flex:1;">Join the journey — save to Airtable</button></div>
+  </div>
+</div>
+
+</div><!-- /main-app -->
+
+<script>
+// ═══════════════════════════════════════════
+// CONFIG — Airtable IDs (do not change)
+// ═══════════════════════════════════════════
+const BASE = "appeUvl4hULiA54dU";
+const T = {
+  travelers: "tblUNHUcIwu39FQDX",
+  logs:      "tblsPf1McIXJXTrpG",
+  ci:        "tblKmQvUV5FdJgmsi",
+  library:   "tblyIcNC65VnRtToL"
+};
+// Travelers field IDs
+const TF = {
+  name:    "fldDMjG1mZo94kIBr",
+  phone:   "fld2eec13l9hauxFO",
+  email:   "fldPuUTbPZkGSqgci",
+  decl:    "fld2mukKi9SO1yLnm",
+  type:    "fldKxRdwBFJ1FMRkP",
+  vehicle: "fldTUSP3z3qQ2BIR8",
+  driver:  "fldbafmZNkWylHuDD",
+  company: "fld5Ft4g2AfNTBBc4",
+  paid:    "fldvex3PEDZ12VLrh",
+  balance: "fldusTftyMgavX4kl",
+  status:  "fldWQp1ZdQhNxFYLA",
+  progress:"fldezzDUUpbaj63QZ",
+  weeks:   "fldIJgYVuqcld5SDK",
+  streak:  "fldqmDghNwLTN5ELf",
+  misses:  "flduhKkShTCKwcSbN",
+  date:    "fld8b1EMOR3Sy6DFy"
+};
+// Weekly log field IDs
+const LF = {
+  id:     "fld4yCbC0LBvSl1Eo",
+  name:   "fldsoknRvDjRw96RN",
+  week:   "flda7XnF8Wk5zvQIB",
+  wdate:  "fldM2x36iRxe6HZET",
+  h1t:    "fldvikvPKa2U5GUtD",
+  h1d:    "fldlLilHjb2ZC5RGR",
+  h2t:    "fldaY3jgeJVvMUlqT",
+  h2d:    "fldZJloZgr7YKcPyk",
+  h3t:    "fldhaoUTzeFgqziyL",
+  h3d:    "flddFwdP73hSVL1As",
+  mst:    "fldZG0axOXgwUgsm3",
+  msd:    "flddUOaa5EyUqbjbX",
+  wstatus:"fldNiG34Eug6L9clZ",
+  dci:    "fld2D77pvSrSQO4FW",
+  exc:    "fldU39GVO1urBl40G",
+  refl:   "fldzS34e5jJH4LI7K"
+};
+// CI session field IDs
+const CF = {
+  title:   "fldkomHTsas8C4WCO",
+  date:    "fldI28s6gQKjxMRhr",
+  week:    "fld1XlYYBZGKUhII4",
+  rep:     "fldzsgVRUy44SoOvS",
+  topic:   "fldXdEgUHw1MM93LU",
+  insight: "fldLAYo5yqBLYi746",
+  kingdom: "fldDiozsGMe9KTALn",
+  att:     "fldL8rtT6a7CS4eo8",
+  status:  "fldaJ07QjVzXfqM46"
+};
+
+// ═══════════════════════════════════════════
+// LOCAL MILESTONE DATA (fallback / library)
+// ═══════════════════════════════════════════
+const MILESTONES = [
+  {t:"Kingdom identity declaration",ty:"All Journeys",w:"Wk 1",d:"Write who you are in Christ as it relates to your journey. Speak it aloud every morning.",k:"Your identity in Christ is the foundation under every journey.",s:"Jeremiah 29:11",ev:"Written declaration (5+ sentences). Read daily for 21 days."},
+  {t:"Write your money story",ty:"Finance",w:"Wk 1–2",d:"Document your complete financial reality honestly. Where does money go? What beliefs did you inherit?",k:"Is your relationship with money stewardship or fear?",s:"Luke 16:10",ev:"Written doc or voice memo, minimum 1 page."},
+  {t:"Read The Richest Man in Babylon",ty:"Finance",w:"Wk 3–4",d:"Read the full book. After each chapter: 1 sentence learned + 1 you're applying.",k:"Paying yourself first is Kingdom stewardship.",s:"Proverbs 13:11",ev:"3-paragraph summary submitted to driver."},
+  {t:"Zero-based budget for 30 days",ty:"Finance",w:"Wk 5–6",d:"Assign every naira a job before the month. Track every spend. Compare plan to reality.",k:"Stewardship is knowing where every resource goes.",s:"Proverbs 21:5",ev:"Screenshot of budget + end-of-month report."},
+  {t:"Launch one income stream",ty:"Finance",w:"Wk 7–8",d:"Identify something to offer, sell, or create. Launch it. Log the first payment received.",k:"God is a God of multiplication.",s:"Genesis 1:28",ev:"Screenshot of first payment or transaction proof."},
+  {t:"Baseline self-assessment — 5 skills",ty:"Performance",w:"Wk 1–2",d:"Rate yourself 1-10 across 5 skills. Record evidence of your current level. This is your starting line.",k:"To know your gifts is the beginning of stewarding them.",s:"Romans 12:6",ev:"5-skill scorecard + video or written evidence."},
+  {t:"Design your training protocol",ty:"Performance",w:"Wk 3–4",d:"Written daily/weekly training plan. What are you practising? How do you measure improvement?",k:"Excellence is an act of worship.",s:"Colossians 3:23",ev:"Written protocol + 7-day training log."},
+  {t:"Minimum viable week",ty:"All Journeys",w:"Wk 4–5",d:"Design your floor for hard seasons — the absolute minimum you will do when life is chaotic.",k:"Endurance is a Kingdom virtue.",s:"Hebrews 12:1",ev:"Written MVW. 3 non-negotiable actions."},
+  {t:"Month 1 transformation review",ty:"All Journeys",w:"Wk 4",d:"Look back at month 1. What changed? What surprised you? What Kingdom truth do you carry forward?",k:"Selah — God built reflection into the Psalms.",s:"Lamentations 3:40",ev:"1-page review + 3 commitments for month 2."}
+];
+
+const CI_ROT = [
+  {w:3,n:"Safa",   topic:"What I learned from my reading and how it connects to my journey"},
+  {w:4,n:"Fortress",topic:"One principle this month the whole group can apply"},
+  {w:5,n:"Amama",  topic:"One thing I almost gave up on — and why I didn't"},
+  {w:6,n:"Yusuf",  topic:"Kingdom perspective on my goal — what Scripture says about where I'm going"},
+  {w:7,n:"Safa",   topic:"Progress: what evidence can I show for this month's work?"},
+  {w:8,n:"Fortress",topic:"A principle I'm applying that is already producing results"},
+  {w:9,n:"Amama",  topic:"How my mindset has shifted since week 1"},
+  {w:10,n:"Yusuf", topic:"What I would tell week-1 me now that I'm in month 3"}
+];
+
+// ═══════════════════════════════════════════
+// API KEY MANAGEMENT
+// ═══════════════════════════════════════════
+function getKey() { return localStorage.getItem("atKey") || ""; }
+
+async function saveKey() {
+  const key = document.getElementById("api-key-input").value.trim();
+  const err = document.getElementById("key-err");
+  err.style.display = "none";
+  if (!key.startsWith("pat")) {
+    err.textContent = "Token must start with 'pat'. Please check you copied it correctly.";
+    err.style.display = "block";
+    return;
+  }
+  const btn = document.getElementById("key-btn");
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span>Verifying...';
+  // Test the key with a lightweight call
+  try {
+    const r = await fetch(
+      `https://api.airtable.com/v0/${BASE}/${T.travelers}?maxRecords=1`,
+      { headers: { Authorization: `Bearer ${key}` } }
+    );
+    if (r.status === 401 || r.status === 403) {
+      err.textContent = "Token rejected by Airtable. Check the scopes and base access, then try again.";
+      err.style.display = "block";
+      btn.disabled = false;
+      btn.innerHTML = "Connect and launch app";
+      return;
+    }
+    localStorage.setItem("atKey", key);
+    launchApp();
+  } catch(e) {
+    err.textContent = "Could not connect. Check your internet and try again.";
+    err.style.display = "block";
+    btn.disabled = false;
+    btn.innerHTML = "Connect and launch app";
+  }
+}
+
+function launchApp() {
+  document.getElementById("key-screen").style.display = "none";
+  document.getElementById("main-app").style.display = "block";
+  loadBoard();
+  renderLib();
+  renderCI();
+  document.getElementById("ci-date").value = new Date().toISOString().split("T")[0];
+}
+
+// ═══════════════════════════════════════════
+// DIRECT AIRTABLE REST API
+// ═══════════════════════════════════════════
+async function atGet(tableId, params = "") {
+  const r = await fetch(
+    `https://api.airtable.com/v0/${BASE}/${tableId}?${params}`,
+    { headers: { Authorization: `Bearer ${getKey()}` } }
+  );
+  if (!r.ok) throw new Error(`Airtable GET failed: ${r.status}`);
+  const d = await r.json();
+  return d.records || [];
+}
+
+async function atPost(tableId, fields) {
+  const r = await fetch(
+    `https://api.airtable.com/v0/${BASE}/${tableId}`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${getKey()}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ records: [{ fields }] })
+    }
+  );
+  if (!r.ok) {
+    const err = await r.json().catch(() => ({}));
+    throw new Error(err?.error?.message || `Airtable POST failed: ${r.status}`);
+  }
+  return await r.json();
+}
+
+// ═══════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════
+function go(name, btn) {
+  document.querySelectorAll(".ntab").forEach(t => t.classList.remove("active"));
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+  document.getElementById("page-" + name).classList.add("active");
+  btn.classList.add("active");
+  if (name === "board")   loadBoard();
+  if (name === "library") renderLib();
+  if (name === "ci")      renderCI();
+}
+
+function toast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 2800);
+}
+function showEl(id, msg) { const e = document.getElementById(id); e.textContent = msg; e.style.display = "block"; }
+function hideEl(id) { document.getElementById(id).style.display = "none"; }
+
+// ═══════════════════════════════════════════
+// BOARD
+// ═══════════════════════════════════════════
+async function loadBoard() {
+  const bdT = document.getElementById("bd-travelers");
+  const bdS = document.getElementById("bd-stakes");
+  bdT.innerHTML = '<div class="page-spin"><div class="page-spinner"></div></div>';
+  bdS.innerHTML = '<div class="page-spin"><div class="page-spinner"></div></div>';
+  try {
+    const records = await atGet(T.travelers);
+    if (!records.length) {
+      bdT.innerHTML = '<div style="text-align:center;padding:28px;font-size:13px;color:var(--ink3);">No travelers yet. <a href="#" onclick="document.querySelectorAll(\'.ntab\')[4].click();return false;" style="color:var(--teal);">Be the first to join.</a></div>';
+      bdS.innerHTML = '<div style="text-align:center;padding:16px;font-size:12px;color:var(--ink3);">No stake data yet.</div>';
+      document.getElementById("m-cnt").textContent = "0";
+      document.getElementById("m-trk").textContent = "0";
+      return;
+    }
+    document.getElementById("m-cnt").textContent = records.length;
+    const tracked = records.filter(r => {
+      const s = (r.fields[TF.status]?.name || r.fields[TF.status] || "").toLowerCase();
+      return s.includes("track") || s.includes("active") || s.includes("ahead");
+    }).length;
+    document.getElementById("m-trk").textContent = tracked;
+
+    const SBADGE = {"On Track":"b-teal","Active":"b-teal","Ahead":"b-green","Needs Rally":"b-coral","Stalled":"b-red"};
+    bdT.innerHTML = records.map(r => {
+      const f = r.fields;
+      const nm = f[TF.name] || "–";
+      const ini = nm.split(" ").map(w => w[0]).join("").substring(0,2).toUpperCase();
+      const goal = (f[TF.decl] || "No declaration set").substring(0, 85);
+      const drv = f[TF.driver] || "–";
+      const prog = Math.round((f[TF.progress] || 0) * 100) || 0;
+      const stat = f[TF.status]?.name || f[TF.status] || "Active";
+      return `<div class="trow">
+        <div class="av" style="background:var(--purple-l);color:var(--purple);">${ini}</div>
+        <div class="tmeta">
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <span class="t-name">${nm}</span>
+            <span class="t-sub">Driver: ${drv}</span>
+          </div>
+          <div class="t-goal">${goal}</div>
+          <div class="prow">
+            <div class="ptrack"><div class="pfill" style="width:${prog}%;background:var(--teal);"></div></div>
+            <span class="ppct">${prog}%</span>
+          </div>
+        </div>
+        <span class="badge ${SBADGE[stat] || 'b-gray'}">${stat}</span>
+      </div>`;
+    }).join("");
+
+    bdS.innerHTML = records.map(r => {
+      const f = r.fields;
+      const nm = f[TF.name] || "–";
+      const ini = nm.split(" ").map(w => w[0]).join("").substring(0,2).toUpperCase();
+      const paid = f[TF.paid] || 10000;
+      const bal  = f[TF.balance] || 10000;
+      const pct  = Math.min(100, Math.round((bal / paid) * 100));
+      const diff = bal - paid;
+      const db = diff >= 0
+        ? `<span class="badge b-teal">+₦${Math.abs(diff).toLocaleString()}</span>`
+        : `<span class="badge b-coral">-₦${Math.abs(diff).toLocaleString()}</span>`;
+      return `<div class="trow">
+        <div class="av av-sm" style="background:var(--purple-l);color:var(--purple);">${ini}</div>
+        <div style="flex:1;min-width:0;">
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px;">
+            <span style="font-weight:500;">${nm}</span>
+            <span style="color:var(--ink3);">₦${bal.toLocaleString()} / ₦${paid.toLocaleString()}</span>
+          </div>
+          <div class="sb-track"><div class="sb-fill" style="width:${pct}%;"></div></div>
+        </div>${db}
+      </div>`;
+    }).join("");
+  } catch(e) {
+    bdT.innerHTML = `<div style="text-align:center;padding:28px;font-size:13px;color:var(--red);">Could not load data: ${e.message}</div>`;
+  }
+}
+
+// ═══════════════════════════════════════════
+// LIBRARY
+// ═══════════════════════════════════════════
+function renderLib() {
+  const filter = document.getElementById("lib-filter").value;
+  const list = MILESTONES.filter(m => filter === "all" || m.ty === filter || m.ty === "All Journeys");
+  const TB = {Finance:"b-green",Performance:"b-purple",Faith:"b-gold","All Journeys":"b-teal",Career:"b-purple",Health:"b-coral"};
+  document.getElementById("lib-list").innerHTML = list.map(m => `
+    <div class="ms-card">
+      <div style="display:flex;justify-content:space-between;gap:8px;margin-bottom:4px;">
+        <div class="ms-title">${m.t}</div>
+        <span class="badge b-gray" style="flex-shrink:0;">${m.w}</span>
+      </div>
+      <div style="margin-bottom:6px;"><span class="badge ${TB[m.ty]||'b-gray'}">${m.ty}</span></div>
+      <div class="ms-desc">${m.d}</div>
+      <div class="ms-kingdom">${m.k}</div>
+      <div class="ms-scripture">${m.s}</div>
+      <div style="font-size:11px;color:var(--ink3);margin-top:4px;">Evidence required: ${m.ev}</div>
+    </div>`).join("");
+}
+
+// ═══════════════════════════════════════════
+// CI
+// ═══════════════════════════════════════════
+function renderCI() {
+  document.getElementById("ci-rot").innerHTML = CI_ROT.map(c => `
+    <div class="trow">
+      <div class="av av-sm" style="background:var(--purple-l);color:var(--purple);">${c.n.substring(0,2).toUpperCase()}</div>
+      <div>
+        <div style="font-size:12px;font-weight:500;">${c.n}
+          <span style="font-size:10px;font-weight:400;color:var(--ink3);">— Week ${c.w}${c.w===3?" (first CI)":""}</span>
+        </div>
+        <div style="font-size:11px;color:var(--ink2);margin-top:1px;">${c.topic}</div>
+      </div>
+    </div>`).join("");
+}
+
+async function saveCI() {
+  const btn = document.getElementById("ci-btn");
+  hideEl("ci-err"); hideEl("ci-suc");
+  const date = document.getElementById("ci-date").value;
+  if (!date) { showEl("ci-err", "Please select a session date."); return; }
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span>Saving...';
+  try {
+    const fields = {};
+    fields[CF.title]   = `CI Session — ${date}`;
+    fields[CF.date]    = date;
+    fields[CF.rep]     = document.getElementById("ci-rep").value;
+    fields[CF.topic]   = document.getElementById("ci-topic").value;
+    fields[CF.insight] = document.getElementById("ci-insight").value;
+    fields[CF.kingdom] = document.getElementById("ci-kingdom").value;
+    fields[CF.att]     = parseInt(document.getElementById("ci-att").value) || 4;
+    fields[CF.status]  = document.getElementById("ci-status").value;
+    await atPost(T.ci, fields);
+    showEl("ci-suc", "CI session saved to Airtable.");
+    toast("Session saved");
+  } catch(e) {
+    showEl("ci-err", `Save failed: ${e.message}`);
+  }
+  btn.disabled = false;
+  btn.innerHTML = "Save session to Airtable";
+}
+
+// ═══════════════════════════════════════════
+// WEEK LOG
+// ═══════════════════════════════════════════
+async function saveLog() {
+  const btn = document.getElementById("log-btn");
+  hideEl("log-err"); hideEl("log-suc");
+  const name = document.getElementById("log-name").value.trim();
+  if (!name) { showEl("log-err", "Please enter your name."); return; }
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span>Saving to Airtable...';
+  const h1d = document.getElementById("h1-done").checked;
+  const h2d = document.getElementById("h2-done").checked;
+  const h3d = document.getElementById("h3-done").checked;
+  const msd = document.getElementById("ms-done").checked;
+  const all = h1d && h2d && h3d && msd;
+  const partial = (h1d || h2d || h3d) && !all;
+  const wStatus = all ? "Complete" : partial ? "Partial" : "Missed";
+  try {
+    const fields = {};
+    fields[LF.id]      = `${name.replace(/\s+/g,"-")}-W${new Date().getWeek()}-${Date.now()}`;
+    fields[LF.name]    = name;
+    fields[LF.week]    = new Date().getWeek();
+    fields[LF.wdate]   = new Date().toISOString().split("T")[0];
+    fields[LF.h1t]     = document.getElementById("h1-text").value;
+    fields[LF.h1d]     = h1d;
+    fields[LF.h2t]     = document.getElementById("h2-text").value;
+    fields[LF.h2d]     = h2d;
+    fields[LF.h3t]     = document.getElementById("h3-text").value;
+    fields[LF.h3d]     = h3d;
+    fields[LF.mst]     = document.getElementById("ms-text").value;
+    fields[LF.msd]     = msd;
+    fields[LF.wstatus] = wStatus;
+    fields[LF.dci]     = document.getElementById("drv-ci").checked;
+    fields[LF.exc]     = document.getElementById("exc-note").checked;
+    fields[LF.refl]    = document.getElementById("refl-text").value;
+    await atPost(T.logs, fields);
+    showEl("log-suc", `Week saved. Status: ${wStatus}. Great work, ${name} — see you at CI.`);
+    toast("Week saved to Airtable");
+  } catch(e) {
+    showEl("log-err", `Save failed: ${e.message}`);
+  }
+  btn.disabled = false;
+  btn.innerHTML = "Save week to Airtable";
+}
+
+// Helper: ISO week number
+Date.prototype.getWeek = function() {
+  const d = new Date(Date.UTC(this.getFullYear(), this.getMonth(), this.getDate()));
+  const day = d.getUTCDay() || 7;
+  d.setUTCDate(d.getUTCDate() + 4 - day);
+  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+  return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+};
+
+// ═══════════════════════════════════════════
+// ONBOARDING
+// ═══════════════════════════════════════════
+let OB = {};
+
+function obFwd(step) {
+  if (step === 1) {
+    const n = document.getElementById("ob-name").value.trim();
+    const p = document.getElementById("ob-phone").value.trim();
+    if (!n || !p) { toast("Name and phone are required"); return; }
+    OB.name = n; OB.phone = p;
+    OB.email = document.getElementById("ob-email").value.trim();
+  } else if (step === 2) {
+    const ty = document.getElementById("ob-type").value;
+    const dc = document.getElementById("ob-decl").value.trim();
+    if (!ty || !dc) { toast("Journey type and declaration are required"); return; }
+    OB.type = ty; OB.decl = dc;
+  } else if (step === 3) {
+    const v  = document.getElementById("ob-vehicle").value.trim();
+    const dr = document.getElementById("ob-driver").value.trim();
+    if (!v || !dr) { toast("Vehicle and driver are required"); return; }
+    OB.vehicle = v; OB.driver = dr;
+    OB.company = document.getElementById("ob-company").value.trim();
+    document.getElementById("ob-summary").innerHTML = `
+      <strong>Name:</strong> ${OB.name}<br>
+      <strong>Phone:</strong> ${OB.phone}<br>
+      ${OB.email ? `<strong>Email:</strong> ${OB.email}<br>` : ""}
+      <strong>Journey:</strong> ${OB.type}<br>
+      <strong>Declaration:</strong> ${OB.decl}<br>
+      <strong>Vehicle:</strong> ${OB.vehicle}<br>
+      <strong>Driver:</strong> ${OB.driver}<br>
+      ${OB.company ? `<strong>Company:</strong> ${OB.company}` : ""}`;
+  }
+  // animate step indicator
+  document.getElementById(`ob${step}`).classList.remove("active");
+  document.getElementById(`ob${step + 1}`).classList.add("active");
+  document.getElementById(`sd${step}`).classList.remove("active");
+  document.getElementById(`sd${step}`).classList.add("done");
+  document.getElementById(`sl${step}`).classList.remove("active");
+  document.getElementById(`sln${step}`).classList.add("done");
+  document.getElementById(`sd${step + 1}`).classList.add("active");
+  document.getElementById(`sl${step + 1}`).classList.add("active");
+}
+
+function obBack(step) {
+  document.getElementById(`ob${step}`).classList.remove("active");
+  document.getElementById(`ob${step - 1}`).classList.add("active");
+  document.getElementById(`sd${step - 1}`).classList.remove("done");
+  document.getElementById(`sd${step - 1}`).classList.add("active");
+  document.getElementById(`sl${step - 1}`).classList.add("active");
+  document.getElementById(`sd${step}`).classList.remove("active");
+  document.getElementById(`sl${step}`).classList.remove("active");
+  if (step > 1) document.getElementById(`sln${step - 1}`).classList.remove("done");
+}
+
+async function submitJoin() {
+  const btn = document.getElementById("join-btn");
+  hideEl("join-err"); hideEl("join-suc");
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span>Creating your profile in Airtable...';
+  try {
+    const fields = {};
+    fields[TF.name]    = OB.name;
+    fields[TF.phone]   = OB.phone;
+    if (OB.email) fields[TF.email] = OB.email;
+    fields[TF.decl]    = OB.decl;
+    fields[TF.type]    = OB.type;
+    fields[TF.vehicle] = OB.vehicle;
+    fields[TF.driver]  = OB.driver;
+    if (OB.company) fields[TF.company] = OB.company;
+    fields[TF.paid]    = 10000;
+    fields[TF.balance] = 10000;
+    fields[TF.status]  = "Active";
+    fields[TF.progress]= 0;
+    fields[TF.weeks]   = 0;
+    fields[TF.streak]  = 0;
+    fields[TF.misses]  = 0;
+    fields[TF.date]    = new Date().toISOString().split("T")[0];
+    await atPost(T.travelers, fields);
+    showEl("join-suc", `Welcome to the journey, ${OB.name}. Your profile is live in Airtable. First CI: Wednesday 23 April, 9pm.`);
+    toast(`${OB.name} has joined`);
+    OB = {};
+    loadBoard();
+  } catch(e) {
+    showEl("join-err", `Could not save your profile: ${e.message}`);
+  }
+  btn.disabled = false;
+  btn.innerHTML = "Join the journey — save to Airtable";
+}
+
+// ═══════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════
+if (getKey()) {
+  launchApp();
+} else {
+  document.getElementById("key-screen").style.display = "flex";
+}
+</script>
+</body>
+</html>
